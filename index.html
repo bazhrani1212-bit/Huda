@@ -31,7 +31,7 @@
       position:sticky;
       top:0;
       z-index:5;
-      background:#ffffff;
+      background:#fff;
       border-bottom:1px solid var(--border);
     }
 
@@ -114,7 +114,7 @@
 
     button,.btn{
       border:1px solid var(--border);
-      background:#ffffff;
+      background:#fff;
       color:var(--text);
       padding:10px 12px;
       border-radius:12px;
@@ -126,13 +126,13 @@
 
     button.primary{
       background:var(--primary);
-      color:#ffffff;
+      color:#fff;
       border-color:transparent;
     }
 
     button.danger{
       background:#b42318;
-      color:#ffffff;
+      color:#fff;
       border-color:transparent;
     }
 
@@ -188,7 +188,7 @@
       border:1px solid var(--border);
       border-radius:14px;
       cursor:pointer;
-      background:#ffffff;
+      background:#fff;
       font-size:23px;
     }
 
@@ -207,7 +207,7 @@
       padding:10px 12px;
       border-radius:12px;
       border:1px solid var(--border);
-      background:#ffffff;
+      background:#fff;
       color:var(--text);
       outline:none;
       font-size:23px;
@@ -237,7 +237,7 @@
       border:1px solid var(--border);
       border-radius:999px;
       color:var(--muted);
-      background:#ffffff;
+      background:#fff;
       font-size:20px;
     }
 
@@ -248,7 +248,7 @@
     }
 
     .card{
-      background:#ffffff;
+      background:#fff;
       border:1px solid var(--border);
       border-radius:var(--radius);
       box-shadow:0 10px 25px rgba(2,6,23,.06);
@@ -323,7 +323,7 @@
       border:1px solid var(--border);
       border-radius:14px;
       overflow:hidden;
-      background:#ffffff;
+      background:#fff;
       display:flex;
       flex-direction:column;
     }
@@ -349,7 +349,7 @@
       bottom:8px;
       left:8px;
       background:rgba(15,122,58,.92);
-      color:#ffffff;
+      color:#fff;
       font-size:18px;
       padding:4px 8px;
       border-radius:999px;
@@ -404,7 +404,7 @@
 
     .dialog{
       width:min(980px,100%);
-      background:#ffffff;
+      background:#fff;
       border-radius:18px;
       border:1px solid var(--border);
       box-shadow:var(--shadow);
@@ -431,7 +431,7 @@
     }
 
     .close{
-      background:#ffffff;
+      background:#fff;
     }
 
     .viewer{
@@ -466,7 +466,7 @@
       bottom:16px;
       right:16px;
       background:#0b1220;
-      color:#ffffff;
+      color:#fff;
       padding:10px 12px;
       border-radius:12px;
       display:none;
@@ -500,7 +500,7 @@
       border:1px solid var(--border);
       padding:2px 6px;
       border-radius:8px;
-      background:#ffffff;
+      background:#fff;
     }
   </style>
 </head>
@@ -513,11 +513,11 @@
       <div>
         <div class="masthead masthead-box">
           <span class="masthead-line" id="headLine1">المملكة العربية السعودية - وزارة التعليم</span>
-          <span class="masthead-line" id="headLine2">روضة وابتدائية الطوال - فريق التميز - مديرة المدرسة: هدى حمدي </span>
+          <span class="masthead-line" id="headLine2">اسم المدرسة - فريق التميز - مديرة المدرسة: اسم المديرة</span>
         </div>
 
         <h1>إدارة شواهد التقويم المدرسي</h1>
-        <div class="sub">منصة محلية لإضافة الشواهد لكل مؤشر — روابط / صور / ملفات — مع حفظ تلقائي.</div>
+        <div class="sub">منصة محلية لإضافة الشواهد لكل مؤشر — روابط / صور / ملفات — مع حفظ تلقائي مستقل لكل مستودع.</div>
       </div>
 
       <div class="actions">
@@ -555,7 +555,7 @@
           </div>
 
           <div style="margin-top:8px">
-            لحفظ نسخة خارج المتصفح أو نقلها لجهاز آخر استخدمي <b>تصدير/استيراد</b>.
+            التخزين أصبح مستقلًا لكل رابط/مستودع GitHub Pages. لنقل نسخة لجهاز آخر استخدمي <b>تصدير/استيراد</b>.
           </div>
         </div>
       </div>
@@ -621,7 +621,7 @@
       </div>
 
       <div class="hint" style="margin-top:10px">
-        سيتم حفظ اسم المدرسة واسم المديرة تلقائيًا داخل المتصفح، ويمكن تعديلها لاحقًا من زر <b>بيانات المدرسة</b>.
+        سيتم حفظ هذه البيانات داخل هذا الرابط فقط، ولا تختلط مع روابط مستودعات أخرى.
       </div>
     </div>
   </div>
@@ -711,7 +711,7 @@
       <div id="evFileBox" style="margin-top:10px;display:none">
         <label class="tiny">اختيار ملف أو صورة</label>
         <input type="file" id="evFile" />
-        <div class="hint">يتم حفظ الملف داخل المتصفح ويمكن استعراضه لاحقًا.</div>
+        <div class="hint">يتم حفظ الملف داخل هذا المتصفح ويمكن استعراضه لاحقًا.</div>
       </div>
 
       <div style="margin-top:10px">
@@ -749,8 +749,23 @@
 <div class="toast" id="toast"></div>
 
 <script>
-const APP_KEY = "schoolEvidenceApp:v1";
-const DB_NAME = "schoolEvidenceBlobs:v1";
+/**********************
+ * Storage + DB Layer
+ * التخزين مستقل لكل مستودع/رابط GitHub Pages
+ **********************/
+
+function createProjectNamespace(){
+  const cleanPath = location.pathname
+    .replace(/\/index\.html$/i,"")
+    .replace(/\/$/,"") || "/";
+
+  return `${location.hostname}${cleanPath}`;
+}
+
+const PROJECT_NAMESPACE = createProjectNamespace();
+
+const APP_KEY = `schoolEvidenceApp:${PROJECT_NAMESPACE}:v2`;
+const DB_NAME = `schoolEvidenceBlobs:${PROJECT_NAMESPACE}:v2`;
 const DB_STORE = "blobs";
 
 let activeViewerUrl = null;
@@ -839,6 +854,9 @@ async function deleteBlob(id){
   });
 }
 
+/**********************
+ * Seed
+ **********************/
 const DOMAIN_ORDER = [
   {key:"admin",name:"الإدارة المدرسية"},
   {key:"teach",name:"مجال التعليم والتعلم"},
@@ -848,13 +866,14 @@ const DOMAIN_ORDER = [
 
 const DEFAULT_SETTINGS = {
   line1:"المملكة العربية السعودية - وزارة التعليم",
-  schoolName:"الابتدائية السادسة والثلاثون",
+  schoolName:"اسم المدرسة",
   teamName:"فريق التميز",
-  principalName:"نورة الرفاعي"
+  principalName:"اسم المديرة"
 };
 
 const SEED = {
-  version:1,
+  version:2,
+  projectNamespace:PROJECT_NAMESPACE,
   activeDomain:"admin",
   settings:structuredClone(DEFAULT_SETTINGS),
   domains:{
@@ -895,6 +914,10 @@ if(!state.settings){
   state.settings = structuredClone(DEFAULT_SETTINGS);
 }
 
+if(!state.projectNamespace){
+  state.projectNamespace = PROJECT_NAMESPACE;
+}
+
 const domainList = $("#domainList");
 const cards = $("#cards");
 const q = $("#q");
@@ -910,8 +933,10 @@ function clearThumbUrls(){
 
 function renderHeader(){
   const s = state.settings || DEFAULT_SETTINGS;
+
   $("#headLine1").textContent = s.line1 || DEFAULT_SETTINGS.line1;
-  $("#headLine2").textContent = `${s.schoolName || DEFAULT_SETTINGS.schoolName} - ${s.teamName || DEFAULT_SETTINGS.teamName} - مديرة المدرسة: ${s.principalName || DEFAULT_SETTINGS.principalName}`;
+  $("#headLine2").textContent =
+    `${s.schoolName || DEFAULT_SETTINGS.schoolName} - ${s.teamName || DEFAULT_SETTINGS.teamName} - مديرة المدرسة: ${s.principalName || DEFAULT_SETTINGS.principalName}`;
 }
 
 function countEvidence(indicatorId){
@@ -1458,6 +1483,7 @@ async function viewEvidence(ev,openInNewTab = false){
 async function exportData(){
   const payload = {
     exportedAt:new Date().toISOString(),
+    projectNamespace:PROJECT_NAMESPACE,
     note:"هذا التصدير يحتوي على البيانات النصية والروابط وبيانات المدرسة فقط. الملفات والصور المخزنة في IndexedDB لا يمكن تضمينها داخل JSON تلقائيًا. لإعادة نقل الملفات أعيدي رفعها في المتصفح الجديد.",
     state
   };
@@ -1489,6 +1515,8 @@ function importData(file){
           state.settings = structuredClone(DEFAULT_SETTINGS);
         }
 
+        state.projectNamespace = PROJECT_NAMESPACE;
+
         saveState();
         render();
         toast("تم الاستيراد ✅");
@@ -1504,7 +1532,7 @@ function importData(file){
 }
 
 async function resetAll(){
-  if(!confirm("سيتم حذف كل البيانات المخزنة بما فيها الملفات. هل أنتِ متأكدة؟")) return;
+  if(!confirm("سيتم حذف كل البيانات المخزنة في هذا الرابط فقط. هل أنتِ متأكدة؟")) return;
 
   localStorage.removeItem(APP_KEY);
   indexedDB.deleteDatabase(DB_NAME);
@@ -1513,7 +1541,7 @@ async function resetAll(){
 
   saveState();
   render();
-  toast("تمت إعادة الضبط");
+  toast("تمت إعادة الضبط لهذا الرابط فقط");
 }
 
 q.addEventListener("input",()=>renderCards());
