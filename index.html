@@ -1,449 +1,443 @@
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>إدارة شواهد التقويم المدرسي</title>
-
-  <style>
-    :root{
-      --bg:#f1fbf1;
-      --card:#ffffff;
-      --text:#0f172a;
-      --muted:#475569;
-      --primary:#0f7a3a;
-      --border:#dbe7db;
-      --shadow:0 10px 30px rgba(2,6,23,.08);
-      --radius:16px;
-    }
-
-    *{box-sizing:border-box}
-
-    body{
-      margin:0;
-      font-family:system-ui,-apple-system,"Segoe UI",Tahoma,Arial;
-      color:var(--text);
-      background:linear-gradient(180deg,#ffffff 0%,var(--bg) 60%,#ffffff 100%);
-      font-size:23px;
-    }
-
-    header{
-      position:sticky;
-      top:0;
-      z-index:5;
-      background:#fff;
-      border-bottom:1px solid var(--border);
-    }
-
-    .wrap{
-      max-width:1300px;
-      margin:0 auto;
-      padding:14px 16px;
-    }
-
-    .brand{
-      display:flex;
-      gap:14px;
-      align-items:center;
-      justify-content:space-between;
-      flex-wrap:wrap;
-    }
-
-    .brand h1{
-      font-size:30px;
-      margin:0;
-      font-weight:900;
-    }
-
-    .sub{
-      font-size:18px;
-      color:var(--muted);
-      line-height:1.5;
-    }
-
-    .masthead{
-      font-weight:900;
-      font-size:20px;
-      line-height:1.55;
-      margin-bottom:10px;
-      text-align:center;
-    }
-
-    .masthead-box{
-      display:inline-block;
-      min-width:min(760px,100%);
-      background:linear-gradient(145deg,rgba(255,255,255,.98) 0%,rgba(232,247,234,.98) 58%,rgba(255,255,255,.98) 100%);
-      border:1px solid rgba(15,122,58,.22);
-      border-radius:18px;
-      padding:10px 18px;
-      color:#0f3d24;
-      box-shadow:
-        0 18px 30px rgba(15,122,58,.13),
-        0 4px 0 rgba(15,122,58,.10),
-        inset 0 1px 0 rgba(255,255,255,.95),
-        inset 0 -7px 18px rgba(15,122,58,.08);
-      position:relative;
-      overflow:hidden;
-    }
-
-    .masthead-box::before{
-      content:"";
-      position:absolute;
-      inset:0 0 auto 0;
-      height:42%;
-      background:linear-gradient(180deg,rgba(255,255,255,.55),rgba(255,255,255,0));
-      pointer-events:none;
-    }
-
-    .masthead-line{
-      display:block;
-      position:relative;
-      z-index:1;
-    }
-
-    .masthead-line + .masthead-line{
-      margin-top:2px;
-    }
-
-    .actions{
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-    }
-
-    button,.btn{
-      border:1px solid var(--border);
-      background:#fff;
-      color:var(--text);
-      padding:10px 12px;
-      border-radius:12px;
-      cursor:pointer;
-      box-shadow:0 3px 10px rgba(2,6,23,.06);
-      font-weight:600;
-      font-size:22px;
-    }
-
-    button.primary{
-      background:var(--primary);
-      color:#fff;
-      border-color:transparent;
-    }
-
-    button.danger{
-      background:#b42318;
-      color:#fff;
-      border-color:transparent;
-    }
-
-    main{
-      max-width:1300px;
-      margin:0 auto;
-      padding:18px 16px 40px;
-    }
-
-    .grid{
-      display:grid;
-      grid-template-columns:320px 1fr;
-      gap:14px;
-    }
-
-    @media(max-width:980px){
-      .grid{grid-template-columns:1fr}
-    }
-
-    .panel{
-      background:var(--card);
-      border:1px solid var(--border);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-    }
-
-    .panel .hd{
-      padding:14px 14px 10px;
-      border-bottom:1px solid var(--border);
-    }
-
-    .panel .hd h2{
-      margin:0;
-      font-size:24px;
-    }
-
-    .panel .bd{
-      padding:12px 14px;
-    }
-
-    .domain-list{
-      display:flex;
-      flex-direction:column;
-      gap:8px;
-    }
-
-    .domain-item{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      padding:10px 12px;
-      border:1px solid var(--border);
-      border-radius:14px;
-      cursor:pointer;
-      background:#fff;
-      font-size:23px;
-    }
-
-    .domain-item.active{
-      outline:2px solid rgba(15,122,58,.20);
-      border-color:rgba(15,122,58,.35);
-    }
-
-    .domain-item small{
-      color:var(--muted);
-      font-size:20px;
-    }
-
-    input[type="text"],textarea,select{
-      width:100%;
-      padding:10px 12px;
-      border-radius:12px;
-      border:1px solid var(--border);
-      background:#fff;
-      color:var(--text);
-      outline:none;
-      font-size:23px;
-    }
-
-    textarea{
-      min-height:90px;
-      resize:vertical;
-    }
-
-    .toolbar{
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-      align-items:center;
-    }
-
-    .search{
-      flex:1;
-    }
-
-    .pill{
-      display:inline-flex;
-      gap:8px;
-      align-items:center;
-      padding:8px 10px;
-      border:1px solid var(--border);
-      border-radius:999px;
-      color:var(--muted);
-      background:#fff;
-      font-size:20px;
-    }
-
-    .cards{
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-    }
-
-    .card{
-      background:#fff;
-      border:1px solid var(--border);
-      border-radius:var(--radius);
-      box-shadow:0 10px 25px rgba(2,6,23,.06);
-    }
-
-    .card .top{
-      padding:12px 14px;
-      border-bottom:1px solid var(--border);
-      display:flex;
-      justify-content:space-between;
-      gap:10px;
-      align-items:flex-start;
-      flex-wrap:wrap;
-    }
-
-    .meta{
-      display:flex;
-      flex-direction:column;
-      gap:4px;
-    }
-
-    .code{
-      font-weight:800;
-      letter-spacing:.5px;
-      font-size:23px;
-    }
-
-    .std{
-      font-size:20px;
-      color:var(--muted);
-    }
-
-    .card .content{
-      padding:12px 14px;
-    }
-
-    .indicator{
-      white-space:pre-wrap;
-      line-height:1.7;
-    }
-
-    .evidence{
-      margin-top:10px;
-      padding-top:10px;
-      border-top:1px dashed var(--border);
-    }
-
-    .evidence-hd{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:10px;
-      flex-wrap:wrap;
-    }
-
-    .ev-grid{
-      display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:10px;
-      margin-top:10px;
-    }
-
-    @media(max-width:760px){
-      .ev-grid{grid-template-columns:1fr}
-    }
-
-    .ev{
-      border:1px solid var(--border);
-      border-radius:14px;
-      background:#fff;
-      padding:12px;
-      display:flex;
-      flex-direction:column;
-      gap:8px;
-    }
-
-    .ev .title{
-      font-weight:800;
-      font-size:22px;
-      line-height:1.4;
-    }
-
-    .ev .sub{
-      font-size:20px;
-      color:var(--muted);
-      overflow-wrap:anywhere;
-    }
-
-    .ev .row{
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-    }
-
-    .ev .row button{
-      padding:8px 10px;
-      border-radius:12px;
-      font-weight:700;
-      box-shadow:none;
-    }
-
-    .modal{
-      position:fixed;
-      inset:0;
-      background:rgba(2,6,23,.55);
-      display:none;
-      align-items:center;
-      justify-content:center;
-      z-index:50;
-      padding:18px;
-    }
-
-    .modal.show{
-      display:flex;
-    }
-
-    .dialog{
-      width:min(980px,100%);
-      background:#fff;
-      border-radius:18px;
-      border:1px solid var(--border);
-      box-shadow:var(--shadow);
-      overflow:hidden;
-      max-height:92vh;
-      overflow-y:auto;
-    }
-
-    .dialog .dh{
-      padding:12px 14px;
-      border-bottom:1px solid var(--border);
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:10px;
-    }
-
-    .dialog .dh strong{
-      font-size:24px;
-    }
-
-    .dialog .db{
-      padding:14px;
-    }
-
-    .close{
-      background:#fff;
-    }
-
-    .hint{
-      color:var(--muted);
-      font-size:18px;
-      line-height:1.7;
-    }
-
-    .toast{
-      position:fixed;
-      bottom:16px;
-      right:16px;
-      background:#0b1220;
-      color:#fff;
-      padding:10px 12px;
-      border-radius:12px;
-      display:none;
-      z-index:60;
-      max-width:360px;
-      font-size:18px;
-    }
-
-    .toast.show{
-      display:block;
-    }
-
-    .split{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:10px;
-    }
-
-    @media(max-width:900px){
-      .split{grid-template-columns:1fr}
-    }
-
-    .tiny{
-      font-size:18px;
-      color:var(--muted);
-    }
-
-    .kbd{
-      font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
-      font-size:18px;
-      border:1px solid var(--border);
-      padding:2px 6px;
-      border-radius:8px;
-      background:#fff;
-    }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>إدارة شواهد التقويم المدرسي</title>
+
+<style>
+:root{
+  --bg:#f1fbf1;
+  --card:#fff;
+  --text:#0f172a;
+  --muted:#475569;
+  --primary:#0f7a3a;
+  --border:#dbe7db;
+  --shadow:0 10px 30px rgba(2,6,23,.08);
+  --radius:16px;
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,"Segoe UI",Tahoma,Arial;
+  color:var(--text);
+  background:linear-gradient(180deg,#ffffff 0%,var(--bg) 60%,#ffffff 100%);
+  font-size:23px;
+}
+
+header{
+  position:sticky;
+  top:0;
+  z-index:5;
+  background:#fff;
+  border-bottom:1px solid var(--border);
+}
+
+.wrap{
+  max-width:1300px;
+  margin:0 auto;
+  padding:14px 16px;
+}
+
+.brand{
+  display:flex;
+  gap:14px;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;
+}
+
+.brand h1{
+  font-size:30px;
+  margin:0;
+  font-weight:900;
+}
+
+.sub{
+  font-size:18px;
+  color:var(--muted);
+  line-height:1.5;
+}
+
+.masthead{
+  font-weight:900;
+  font-size:20px;
+  line-height:1.55;
+  margin-bottom:10px;
+  text-align:center;
+}
+
+.masthead-box{
+  display:inline-block;
+  min-width:min(760px,100%);
+  background:linear-gradient(145deg,rgba(255,255,255,.98) 0%,rgba(232,247,234,.98) 58%,rgba(255,255,255,.98) 100%);
+  border:1px solid rgba(15,122,58,.22);
+  border-radius:18px;
+  padding:10px 18px;
+  color:#0f3d24;
+  box-shadow:
+    0 18px 30px rgba(15,122,58,.13),
+    0 4px 0 rgba(15,122,58,.10),
+    inset 0 1px 0 rgba(255,255,255,.95),
+    inset 0 -7px 18px rgba(15,122,58,.08);
+  position:relative;
+  overflow:hidden;
+}
+
+.masthead-box::before{
+  content:"";
+  position:absolute;
+  inset:0 0 auto 0;
+  height:42%;
+  background:linear-gradient(180deg,rgba(255,255,255,.55),rgba(255,255,255,0));
+  pointer-events:none;
+}
+
+.masthead-line{
+  display:block;
+  position:relative;
+  z-index:1;
+}
+
+.actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+button,.btn{
+  border:1px solid var(--border);
+  background:#fff;
+  color:var(--text);
+  padding:10px 12px;
+  border-radius:12px;
+  cursor:pointer;
+  box-shadow:0 3px 10px rgba(2,6,23,.06);
+  font-weight:600;
+  font-size:22px;
+}
+
+button.primary{
+  background:var(--primary);
+  color:#fff;
+  border-color:transparent;
+}
+
+button.danger{
+  background:#b42318;
+  color:#fff;
+  border-color:transparent;
+}
+
+main{
+  max-width:1300px;
+  margin:0 auto;
+  padding:18px 16px 40px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:320px 1fr;
+  gap:14px;
+}
+
+@media(max-width:980px){
+  .grid{grid-template-columns:1fr}
+}
+
+.panel{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+}
+
+.panel .hd{
+  padding:14px;
+  border-bottom:1px solid var(--border);
+}
+
+.panel .hd h2{
+  margin:0;
+  font-size:24px;
+}
+
+.panel .bd{
+  padding:12px 14px;
+}
+
+.domain-list{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+
+.domain-item{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding:10px 12px;
+  border:1px solid var(--border);
+  border-radius:14px;
+  cursor:pointer;
+  background:#fff;
+  font-size:23px;
+}
+
+.domain-item.active{
+  outline:2px solid rgba(15,122,58,.20);
+  border-color:rgba(15,122,58,.35);
+}
+
+.domain-item small{
+  color:var(--muted);
+  font-size:20px;
+}
+
+input[type="text"],textarea,select{
+  width:100%;
+  padding:10px 12px;
+  border-radius:12px;
+  border:1px solid var(--border);
+  background:#fff;
+  color:var(--text);
+  outline:none;
+  font-size:23px;
+}
+
+textarea{
+  min-height:90px;
+  resize:vertical;
+}
+
+.toolbar{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  align-items:center;
+}
+
+.search{
+  flex:1;
+}
+
+.pill{
+  display:inline-flex;
+  gap:8px;
+  align-items:center;
+  padding:8px 10px;
+  border:1px solid var(--border);
+  border-radius:999px;
+  color:var(--muted);
+  background:#fff;
+  font-size:20px;
+}
+
+.cards{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.card{
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  box-shadow:0 10px 25px rgba(2,6,23,.06);
+}
+
+.card .top{
+  padding:12px 14px;
+  border-bottom:1px solid var(--border);
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  align-items:flex-start;
+  flex-wrap:wrap;
+}
+
+.meta{
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+}
+
+.code{
+  font-weight:800;
+  letter-spacing:.5px;
+  font-size:23px;
+}
+
+.std{
+  font-size:20px;
+  color:var(--muted);
+}
+
+.card .content{
+  padding:12px 14px;
+}
+
+.indicator{
+  white-space:pre-wrap;
+  line-height:1.7;
+}
+
+.evidence{
+  margin-top:10px;
+  padding-top:10px;
+  border-top:1px dashed var(--border);
+}
+
+.evidence-hd{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.ev-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+  margin-top:10px;
+}
+
+@media(max-width:760px){
+  .ev-grid{grid-template-columns:1fr}
+}
+
+.ev{
+  border:1px solid var(--border);
+  border-radius:14px;
+  background:#fff;
+  padding:12px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+
+.ev .title{
+  font-weight:800;
+  font-size:22px;
+  line-height:1.4;
+}
+
+.ev .sub{
+  font-size:20px;
+  color:var(--muted);
+  overflow-wrap:anywhere;
+}
+
+.ev .row{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+.ev .row button{
+  padding:8px 10px;
+  border-radius:12px;
+  font-weight:700;
+  box-shadow:none;
+}
+
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(2,6,23,.55);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:50;
+  padding:18px;
+}
+
+.modal.show{
+  display:flex;
+}
+
+.dialog{
+  width:min(980px,100%);
+  background:#fff;
+  border-radius:18px;
+  border:1px solid var(--border);
+  box-shadow:var(--shadow);
+  overflow:hidden;
+  max-height:92vh;
+  overflow-y:auto;
+}
+
+.dialog .dh{
+  padding:12px 14px;
+  border-bottom:1px solid var(--border);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+}
+
+.dialog .dh strong{
+  font-size:24px;
+}
+
+.dialog .db{
+  padding:14px;
+}
+
+.close{
+  background:#fff;
+}
+
+.hint{
+  color:var(--muted);
+  font-size:18px;
+  line-height:1.7;
+}
+
+.toast{
+  position:fixed;
+  bottom:16px;
+  right:16px;
+  background:#0b1220;
+  color:#fff;
+  padding:10px 12px;
+  border-radius:12px;
+  display:none;
+  z-index:60;
+  max-width:360px;
+  font-size:18px;
+}
+
+.toast.show{
+  display:block;
+}
+
+.split{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+@media(max-width:900px){
+  .split{grid-template-columns:1fr}
+}
+
+.tiny{
+  font-size:18px;
+  color:var(--muted);
+}
+
+.save-status{
+  margin-top:8px;
+  color:#0f7a3a;
+  font-size:18px;
+  font-weight:700;
+}
+</style>
 </head>
 
 <body>
@@ -459,16 +453,17 @@
 
         <h1>إدارة شواهد التقويم المدرسي</h1>
         <div class="sub">منصة محلية لإضافة روابط الشواهد لكل مؤشر مع حفظ تلقائي.</div>
+        <div class="save-status" id="saveStatus">آخر حفظ: لم يتم الحفظ بعد</div>
       </div>
 
       <div class="actions">
         <button class="primary" id="btnAddIndicator">+ إضافة مؤشر</button>
         <button id="btnSettings">بيانات المدرسة</button>
-        <button id="btnExport">تصدير نسخة (JSON)</button>
+        <button id="btnExport">تصدير نسخة</button>
 
         <label class="btn" style="display:inline-flex;align-items:center;gap:8px">
           استيراد نسخة
-          <input id="importFile" type="file" accept="application/json" style="display:none" />
+          <input id="importFile" type="file" accept="application/json" style="display:none">
         </label>
 
         <button class="danger" id="btnReset">إعادة ضبط</button>
@@ -488,13 +483,9 @@
         <div class="domain-list" id="domainList"></div>
 
         <div style="margin-top:12px" class="hint">
-          <div class="pill">
-            💾 الحفظ تلقائيًا:
-            <span class="kbd">LocalStorage</span>
-          </div>
-
+          <div class="pill">💾 الحفظ: LocalStorage</div>
           <div style="margin-top:8px">
-            هذا الإصدار مخصص لإضافة <b>روابط فقط</b> بدون رفع صور أو ملفات.
+            هذا الإصدار مخصص لإضافة <b>روابط فقط</b>.
           </div>
         </div>
       </div>
@@ -504,7 +495,7 @@
       <div class="hd">
         <div class="toolbar">
           <div class="search">
-            <input type="text" id="q" placeholder="ابحثي برمز المؤشر أو كلمة من المعيار/المؤشر..." />
+            <input type="text" id="q" placeholder="ابحثي برمز المؤشر أو كلمة من المعيار/المؤشر...">
           </div>
           <div class="pill" id="stat"></div>
         </div>
@@ -514,18 +505,17 @@
         <div class="cards" id="cards"></div>
 
         <div class="hint" id="empty" style="display:none;padding:12px;border:1px dashed var(--border);border-radius:14px">
-          لا توجد نتائج. جرّبي تعديل البحث أو إضافة مؤشر جديد.
+          لا توجد نتائج.
         </div>
       </div>
     </section>
   </div>
 </main>
 
-<!-- بيانات المدرسة -->
 <div class="modal" id="mSettings">
   <div class="dialog">
     <div class="dh">
-      <strong>بيانات المدرسة ورأس الصفحة</strong>
+      <strong>بيانات المدرسة</strong>
       <button class="close" id="closeSettings">✕</button>
     </div>
 
@@ -533,36 +523,35 @@
       <div class="split">
         <div>
           <label class="tiny">اسم المدرسة</label>
-          <input type="text" id="sSchool" placeholder="مثال: الابتدائية السادسة والثلاثون" />
+          <input type="text" id="sSchool">
         </div>
 
         <div>
           <label class="tiny">اسم مديرة المدرسة</label>
-          <input type="text" id="sPrincipal" placeholder="مثال: نورة الرفاعي" />
+          <input type="text" id="sPrincipal">
         </div>
       </div>
 
       <div class="split" style="margin-top:10px">
         <div>
-          <label class="tiny">السطر الأول في رأس الصفحة</label>
-          <input type="text" id="sLine1" placeholder="المملكة العربية السعودية - وزارة التعليم" />
+          <label class="tiny">السطر الأول</label>
+          <input type="text" id="sLine1">
         </div>
 
         <div>
-          <label class="tiny">فريق العمل / القسم</label>
-          <input type="text" id="sTeam" placeholder="مثال: فريق التميز" />
+          <label class="tiny">فريق العمل</label>
+          <input type="text" id="sTeam">
         </div>
       </div>
 
-      <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
-        <button class="primary" id="saveSettings">حفظ بيانات المدرسة</button>
+      <div style="margin-top:12px">
+        <button class="primary" id="saveSettings">حفظ</button>
         <button id="cancelSettings">إلغاء</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- إضافة / تعديل مؤشر -->
 <div class="modal" id="mIndicator">
   <div class="dialog">
     <div class="dh">
@@ -579,33 +568,33 @@
 
         <div>
           <label class="tiny">المعيار</label>
-          <input type="text" id="fStandard" placeholder="مثال: التخطيط" />
+          <input type="text" id="fStandard">
         </div>
       </div>
 
       <div class="split" style="margin-top:10px">
         <div>
           <label class="tiny">رمز المؤشر</label>
-          <input type="text" id="fCode" placeholder="مثال: 1-1-1-1" />
+          <input type="text" id="fCode">
         </div>
 
         <div>
           <label class="tiny">عنوان المؤشر</label>
-          <input type="text" id="fIndicatorTitle" placeholder="مثال: تضع المدرسة خطة تشغيلية..." />
+          <input type="text" id="fIndicatorTitle">
         </div>
       </div>
 
       <div style="margin-top:10px">
         <label class="tiny">وصف المؤشر</label>
-        <textarea id="fIndicatorDesc" placeholder="يمكنك لصق وصف المؤشر هنا..."></textarea>
+        <textarea id="fIndicatorDesc"></textarea>
       </div>
 
       <div style="margin-top:10px">
         <label class="tiny">وثائق مقترحة</label>
-        <textarea id="fSuggested" placeholder="مثال: رابط ملف الخطة، رابط صورة النشاط، رابط تقرير..."></textarea>
+        <textarea id="fSuggested"></textarea>
       </div>
 
-      <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+      <div style="margin-top:12px">
         <button class="primary" id="saveIndicator">حفظ</button>
         <button id="cancelIndicator">إلغاء</button>
       </div>
@@ -613,32 +602,28 @@
   </div>
 </div>
 
-<!-- إضافة رابط شاهد -->
 <div class="modal" id="mEvidence">
   <div class="dialog">
     <div class="dh">
-      <strong id="mEvidenceTitle">إضافة رابط شاهد</strong>
+      <strong>إضافة رابط شاهد</strong>
       <button class="close" id="closeEvidence">✕</button>
     </div>
 
     <div class="db">
-      <div>
-        <label class="tiny">عنوان الرابط</label>
-        <input type="text" id="evTitle" placeholder="مثال: رابط خطة المدرسة" />
-      </div>
+      <label class="tiny">عنوان الرابط</label>
+      <input type="text" id="evTitle">
 
       <div style="margin-top:10px">
-        <label class="tiny">رابط الشاهد</label>
-        <input type="text" id="evUrl" placeholder="https://..." />
-        <div class="hint">يمكنك إضافة روابط Google Drive أو OneDrive أو أي رابط مباشر.</div>
+        <label class="tiny">الرابط</label>
+        <input type="text" id="evUrl" placeholder="https://...">
       </div>
 
       <div style="margin-top:10px">
         <label class="tiny">ملاحظات</label>
-        <textarea id="evNotes" placeholder="ملاحظات مختصرة..."></textarea>
+        <textarea id="evNotes"></textarea>
       </div>
 
-      <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+      <div style="margin-top:12px">
         <button class="primary" id="saveEvidence">إضافة الرابط</button>
         <button id="cancelEvidence">إلغاء</button>
       </div>
@@ -649,9 +634,9 @@
 <div class="toast" id="toast"></div>
 
 <script>
-const PROJECT_NAMESPACE = "schoolEvidenceLinksOnly:v1";
-const APP_KEY = PROJECT_NAMESPACE + ":state";
-const BACKUP_KEY = PROJECT_NAMESPACE + ":backup";
+const APP_KEY = "schoolEvidenceLinksOnly_FIXED_STATE_V4";
+const BACKUP_KEY = "schoolEvidenceLinksOnly_FIXED_BACKUP_V4";
+const LAST_SAVE_KEY = "schoolEvidenceLinksOnly_FIXED_LAST_SAVE_V4";
 
 function uuid(){
   return crypto.randomUUID ? crypto.randomUUID() : "id-" + Date.now() + "-" + Math.random().toString(16).slice(2);
@@ -668,17 +653,14 @@ function toast(msg){
   setTimeout(()=>t.classList.remove("show"),2500);
 }
 
-function escapeHtml(value){
-  return String(value || "").replace(/[&<>"]/g,function(c){
-    return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c];
-  });
-}
-
-function normalizeUrl(url){
-  const value = String(url || "").trim();
-  if(!value) return "";
-  if(/^https?:\/\//i.test(value)) return value;
-  return "https://" + value;
+function updateSaveStatus(){
+  const savedAt = localStorage.getItem(LAST_SAVE_KEY);
+  const el = $("#saveStatus");
+  if(savedAt){
+    el.textContent = "آخر حفظ: " + savedAt;
+  }else{
+    el.textContent = "آخر حفظ: لم يتم الحفظ بعد";
+  }
 }
 
 function saveState(){
@@ -686,30 +668,57 @@ function saveState(){
     const text = JSON.stringify(state);
     localStorage.setItem(APP_KEY,text);
     localStorage.setItem(BACKUP_KEY,text);
-    localStorage.setItem(APP_KEY + ":savedAt",new Date().toISOString());
+
+    const now = new Date().toLocaleString("ar-SA");
+    localStorage.setItem(LAST_SAVE_KEY,now);
+
+    updateSaveStatus();
     return true;
   }catch(error){
-    console.error("فشل حفظ البيانات:",error);
-    alert("تعذر حفظ البيانات. قد تكون مساحة المتصفح ممتلئة.");
+    console.error("فشل الحفظ:",error);
+    alert("تعذر حفظ البيانات. تأكدي من عدم استخدام التصفح الخفي.");
     return false;
   }
 }
 
 function forceSave(){
-  try{ saveState(); }catch(error){ console.error(error); }
+  try{
+    saveState();
+  }catch(error){
+    console.error(error);
+  }
 }
 
 function loadState(){
   try{
     const raw = localStorage.getItem(APP_KEY) || localStorage.getItem(BACKUP_KEY);
     if(!raw) return null;
-    const parsed = JSON.parse(raw);
-    if(parsed && parsed.domains && parsed.evidence) return parsed;
+
+    const data = JSON.parse(raw);
+    if(data && data.domains && data.evidence){
+      return data;
+    }
+
     return null;
   }catch(error){
-    console.error("تعذر تحميل البيانات:",error);
+    console.error("فشل تحميل البيانات:",error);
     return null;
   }
+}
+
+function escapeHtml(value){
+  return String(value || "").replace(/[&<>"]/g,function(c){
+    return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c];
+  });
+}
+
+function normalizeUrl(url){
+  let value = String(url || "").trim();
+  if(!value) return "";
+  if(!/^https?:\/\//i.test(value)){
+    value = "https://" + value;
+  }
+  return value;
 }
 
 const DOMAIN_ORDER = [
@@ -727,7 +736,7 @@ const DEFAULT_SETTINGS = {
 };
 
 const SEED = {
-  version:1,
+  version:4,
   activeDomain:"admin",
   settings:structuredClone(DEFAULT_SETTINGS),
   domains:{
@@ -767,6 +776,9 @@ let state = loadState() || structuredClone(SEED);
 if(!state.settings){
   state.settings = structuredClone(DEFAULT_SETTINGS);
 }
+
+let currentIndicatorForEvidence = null;
+let editingIndicatorId = null;
 
 const domainList = $("#domainList");
 const cards = $("#cards");
@@ -829,13 +841,7 @@ function renderCards(){
 
   const list = (domain?.indicators || []).filter(item=>{
     if(!query) return true;
-    const all = normalizeText([
-      item.code,
-      item.standard,
-      item.title,
-      item.desc,
-      item.suggested
-    ].join(" "));
+    const all = normalizeText([item.code,item.standard,item.title,item.desc,item.suggested].join(" "));
     return all.includes(query);
   });
 
@@ -846,7 +852,6 @@ function renderCards(){
 
   list.sort((a,b)=>(a.code || "").localeCompare(b.code || "","ar")).forEach(item=>{
     const evCount = countEvidence(item.id);
-
     const card = document.createElement("div");
     card.className = "card";
 
@@ -876,7 +881,6 @@ function renderCards(){
             <div class="pill">🔗 الروابط: <b>${evCount}</b></div>
             <div class="hint">إضافة روابط الشواهد فقط</div>
           </div>
-
           <div class="ev-grid" id="ev-${item.id}"></div>
         </div>
       </div>
@@ -889,8 +893,6 @@ function renderCards(){
     cards.appendChild(card);
     renderEvidenceGrid(item.id);
   });
-
-  saveState();
 }
 
 function renderEvidenceGrid(indicatorId){
@@ -930,7 +932,7 @@ function renderEvidenceGrid(indicatorId){
         await navigator.clipboard.writeText(ev.url);
         toast("تم نسخ الرابط ✅");
       }catch{
-        toast("تعذر النسخ، انسخي الرابط يدويًا");
+        toast("تعذر النسخ");
       }
     };
     el.querySelector('[data-act="remove"]').onclick = ()=>removeEvidence(indicatorId,ev.id);
@@ -943,6 +945,7 @@ function render(){
   renderHeader();
   renderDomains();
   renderCards();
+  updateSaveStatus();
 }
 
 function showModal(id){
@@ -980,11 +983,9 @@ function saveSettings(){
 
   saveState();
   hideModal("mSettings");
-  renderHeader();
+  render();
   toast("تم حفظ بيانات المدرسة ✅");
 }
-
-let editingIndicatorId = null;
 
 function findIndicatorDomain(indicatorId){
   for(const d of DOMAIN_ORDER){
@@ -1077,16 +1078,11 @@ function deleteIndicator(indicatorId){
   toast("تم الحذف");
 }
 
-let currentIndicatorForEvidence = null;
-
 function openEvidenceModal(indicatorId){
   currentIndicatorForEvidence = indicatorId;
-
-  $("#mEvidenceTitle").textContent = "إضافة رابط شاهد";
   $("#evTitle").value = "";
   $("#evUrl").value = "";
   $("#evNotes").value = "";
-
   showModal("mEvidence");
 }
 
@@ -1142,7 +1138,6 @@ function exportData(){
 
   const payload = {
     exportedAt:new Date().toISOString(),
-    note:"هذا التصدير يحتوي على البيانات والروابط فقط.",
     state
   };
 
@@ -1192,7 +1187,7 @@ function resetAll(){
 
   localStorage.removeItem(APP_KEY);
   localStorage.removeItem(BACKUP_KEY);
-  localStorage.removeItem(APP_KEY + ":savedAt");
+  localStorage.removeItem(LAST_SAVE_KEY);
 
   state = structuredClone(SEED);
 
@@ -1224,11 +1219,7 @@ $("#btnExport").addEventListener("click",exportData);
 
 $("#importFile").addEventListener("change",e=>{
   const file = e.target.files?.[0];
-
-  if(file){
-    importData(file);
-  }
-
+  if(file) importData(file);
   e.target.value = "";
 });
 
@@ -1236,7 +1227,6 @@ $("#btnReset").addEventListener("click",resetAll);
 
 ["mSettings","mIndicator","mEvidence"].forEach(id=>{
   const modal = document.getElementById(id);
-
   modal.addEventListener("click",e=>{
     if(e.target === modal){
       hideModal(id);
