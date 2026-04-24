@@ -72,8 +72,7 @@
     .masthead-box{
       display:inline-block;
       min-width:min(760px,100%);
-      background:
-        linear-gradient(145deg,rgba(255,255,255,.98) 0%,rgba(232,247,234,.98) 58%,rgba(255,255,255,.98) 100%);
+      background:linear-gradient(145deg,rgba(255,255,255,.98) 0%,rgba(232,247,234,.98) 58%,rgba(255,255,255,.98) 100%);
       border:1px solid rgba(15,122,58,.22);
       border-radius:18px;
       padding:10px 18px;
@@ -517,7 +516,7 @@
         </div>
 
         <h1>إدارة شواهد التقويم المدرسي</h1>
-        <div class="sub">منصة محلية لإضافة الشواهد لكل مؤشر — روابط / صور / ملفات — مع حفظ تلقائي مستقل لكل مستودع.</div>
+        <div class="sub">منصة محلية لإضافة الشواهد لكل مؤشر — روابط / صور / ملفات — مع حفظ تلقائي.</div>
       </div>
 
       <div class="actions">
@@ -555,7 +554,7 @@
           </div>
 
           <div style="margin-top:8px">
-            التخزين أصبح مستقلًا لكل رابط/مستودع GitHub Pages. لنقل نسخة لجهاز آخر استخدمي <b>تصدير/استيراد</b>.
+            عند الإغلاق يتم حفظ البيانات تلقائيًا. لنقل نسخة لجهاز آخر استخدمي <b>تصدير/استيراد</b>.
           </div>
         </div>
       </div>
@@ -618,10 +617,6 @@
       <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
         <button class="primary" id="saveSettings">حفظ بيانات المدرسة</button>
         <button id="cancelSettings">إلغاء</button>
-      </div>
-
-      <div class="hint" style="margin-top:10px">
-        سيتم حفظ هذه البيانات داخل هذا الرابط فقط، ولا تختلط مع روابط مستودعات أخرى.
       </div>
     </div>
   </div>
@@ -705,13 +700,11 @@
       <div id="evLinkBox" style="margin-top:10px">
         <label class="tiny">الرابط</label>
         <input type="text" id="evUrl" placeholder="https://..." />
-        <div class="hint">سيُفتح الرابط في تبويب جديد.</div>
       </div>
 
       <div id="evFileBox" style="margin-top:10px;display:none">
         <label class="tiny">اختيار ملف أو صورة</label>
         <input type="file" id="evFile" />
-        <div class="hint">يتم حفظ الملف داخل هذا المتصفح ويمكن استعراضه لاحقًا.</div>
       </div>
 
       <div style="margin-top:10px">
@@ -749,23 +742,17 @@
 <div class="toast" id="toast"></div>
 
 <script>
-/**********************
- * Storage + DB Layer
- * التخزين مستقل لكل مستودع/رابط GitHub Pages
- **********************/
-
 function createProjectNamespace(){
-  const cleanPath = location.pathname
+  const path = location.pathname
     .replace(/\/index\.html$/i,"")
     .replace(/\/$/,"") || "/";
-
-  return `${location.hostname}${cleanPath}`;
+  return `${location.hostname}${path}`;
 }
 
 const PROJECT_NAMESPACE = createProjectNamespace();
-
-const APP_KEY = `schoolEvidenceApp:${PROJECT_NAMESPACE}:v2`;
-const DB_NAME = `schoolEvidenceBlobs:${PROJECT_NAMESPACE}:v2`;
+const APP_KEY = `schoolEvidenceApp:${PROJECT_NAMESPACE}:v3`;
+const BACKUP_KEY = `${APP_KEY}:backup`;
+const DB_NAME = `schoolEvidenceBlobs:${PROJECT_NAMESPACE}:v3`;
 const DB_STORE = "blobs";
 
 let activeViewerUrl = null;
@@ -792,17 +779,60 @@ function escapeHtml(value){
   });
 }
 
-function loadState(){
+function safeStringify(data){
   try{
-    const raw = localStorage.getItem(APP_KEY);
-    return raw ? JSON.parse(raw) : null;
-  }catch{
+    return JSON.stringify(data);
+  }catch(error){
+    console.error("تعذر تحويل البيانات للحفظ",error);
     return null;
   }
 }
 
 function saveState(){
-  localStorage.setItem(APP_KEY,JSON.stringify(state));
+  const text = safeStringify(state);
+  if(!text){
+    toast("تعذر حفظ البيانات");
+    return false;
+  }
+
+  try{
+    localStorage.setItem(APP_KEY,text);
+    localStorage.setItem(BACKUP_KEY,text);
+    localStorage.setItem(`${APP_KEY}:savedAt`,new Date().toISOString());
+    return true;
+  }catch(error){
+    console.error("فشل الحفظ في localStorage",error);
+    alert("تعذر حفظ البيانات. قد تكون مساحة التخزين ممتلئة. صدّري نسخة احتياطية الآن.");
+    return false;
+  }
+}
+
+function forceSave(){
+  try{
+    saveState();
+  }catch(error){
+    console.error("فشل الحفظ عند الإغلاق",error);
+  }
+}
+
+function loadState(){
+  const keys = [APP_KEY,BACKUP_KEY];
+
+  for(const key of keys){
+    try{
+      const raw = localStorage.getItem(key);
+      if(raw){
+        const parsed = JSON.parse(raw);
+        if(parsed && parsed.domains && parsed.evidence){
+          return parsed;
+        }
+      }
+    }catch(error){
+      console.warn("تعذر قراءة نسخة محفوظة",key,error);
+    }
+  }
+
+  return null;
 }
 
 function openDB(){
@@ -854,9 +884,6 @@ async function deleteBlob(id){
   });
 }
 
-/**********************
- * Seed
- **********************/
 const DOMAIN_ORDER = [
   {key:"admin",name:"الإدارة المدرسية"},
   {key:"teach",name:"مجال التعليم والتعلم"},
@@ -872,7 +899,7 @@ const DEFAULT_SETTINGS = {
 };
 
 const SEED = {
-  version:2,
+  version:3,
   projectNamespace:PROJECT_NAMESPACE,
   activeDomain:"admin",
   settings:structuredClone(DEFAULT_SETTINGS),
@@ -933,7 +960,6 @@ function clearThumbUrls(){
 
 function renderHeader(){
   const s = state.settings || DEFAULT_SETTINGS;
-
   $("#headLine1").textContent = s.line1 || DEFAULT_SETTINGS.line1;
   $("#headLine2").textContent =
     `${s.schoolName || DEFAULT_SETTINGS.schoolName} - ${s.teamName || DEFAULT_SETTINGS.teamName} - مديرة المدرسة: ${s.principalName || DEFAULT_SETTINGS.principalName}`;
@@ -1054,6 +1080,8 @@ function renderCards(){
     cards.appendChild(card);
     renderEvidenceGrid(item.id);
   });
+
+  saveState();
 }
 
 async function renderEvidenceGrid(indicatorId){
@@ -1128,6 +1156,8 @@ function hideModal(id){
   if(id === "mViewer"){
     closeViewerUrl();
   }
+
+  saveState();
 }
 
 function openSettingsModal(){
@@ -1435,6 +1465,7 @@ async function viewEvidence(ev,openInNewTab = false){
       btnOpen.click();
     }
 
+    saveState();
     return;
   }
 
@@ -1478,9 +1509,13 @@ async function viewEvidence(ev,openInNewTab = false){
   if(openInNewTab){
     btnOpen.click();
   }
+
+  saveState();
 }
 
 async function exportData(){
+  forceSave();
+
   const payload = {
     exportedAt:new Date().toISOString(),
     projectNamespace:PROJECT_NAMESPACE,
@@ -1535,6 +1570,9 @@ async function resetAll(){
   if(!confirm("سيتم حذف كل البيانات المخزنة في هذا الرابط فقط. هل أنتِ متأكدة؟")) return;
 
   localStorage.removeItem(APP_KEY);
+  localStorage.removeItem(BACKUP_KEY);
+  localStorage.removeItem(`${APP_KEY}:savedAt`);
+
   indexedDB.deleteDatabase(DB_NAME);
 
   state = structuredClone(SEED);
@@ -1544,7 +1582,10 @@ async function resetAll(){
   toast("تمت إعادة الضبط لهذا الرابط فقط");
 }
 
-q.addEventListener("input",()=>renderCards());
+q.addEventListener("input",()=>{
+  renderCards();
+  saveState();
+});
 
 $("#btnSettings").addEventListener("click",openSettingsModal);
 $("#saveSettings").addEventListener("click",saveSettings);
@@ -1587,12 +1628,16 @@ $("#btnReset").addEventListener("click",resetAll);
   });
 });
 
-window.addEventListener("beforeunload",()=>{
-  clearThumbUrls();
-  closeViewerUrl();
+window.addEventListener("beforeunload",forceSave);
+window.addEventListener("pagehide",forceSave);
+document.addEventListener("visibilitychange",()=>{
+  if(document.visibilityState === "hidden"){
+    forceSave();
+  }
 });
 
 render();
+saveState();
 </script>
 
 </body>
