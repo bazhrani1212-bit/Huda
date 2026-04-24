@@ -24,7 +24,7 @@
       font-family:system-ui,-apple-system,"Segoe UI",Tahoma,Arial;
       color:var(--text);
       background:linear-gradient(180deg,#ffffff 0%,var(--bg) 60%,#ffffff 100%);
-      font-size:24px;
+      font-size:23px;
     }
 
     header{
@@ -66,22 +66,45 @@
       font-size:20px;
       line-height:1.55;
       margin-bottom:10px;
+      text-align:center;
     }
 
     .masthead-box{
       display:inline-block;
-      background:linear-gradient(135deg,#ffffff 0%,#e8f7ea 60%,#ffffff 100%);
-      border:1px solid rgba(15,122,58,.18);
-      border-radius:14px;
-      padding:8px 10px;
+      min-width:min(760px,100%);
+      background:
+        linear-gradient(145deg,rgba(255,255,255,.98) 0%,rgba(232,247,234,.98) 58%,rgba(255,255,255,.98) 100%);
+      border:1px solid rgba(15,122,58,.22);
+      border-radius:18px;
+      padding:10px 18px;
+      color:#0f3d24;
       box-shadow:
-        0 10px 20px rgba(2,6,23,.10),
-        inset 0 1px 0 rgba(255,255,255,.78),
-        inset 0 -5px 12px rgba(15,122,58,.08);
+        0 18px 30px rgba(15,122,58,.13),
+        0 4px 0 rgba(15,122,58,.10),
+        inset 0 1px 0 rgba(255,255,255,.95),
+        inset 0 -7px 18px rgba(15,122,58,.08);
+      position:relative;
+      overflow:hidden;
     }
 
-    .masthead-line{display:block}
-    .masthead-line + .masthead-line{margin-top:2px}
+    .masthead-box::before{
+      content:"";
+      position:absolute;
+      inset:0 0 auto 0;
+      height:42%;
+      background:linear-gradient(180deg,rgba(255,255,255,.55),rgba(255,255,255,0));
+      pointer-events:none;
+    }
+
+    .masthead-line{
+      display:block;
+      position:relative;
+      z-index:1;
+    }
+
+    .masthead-line + .masthead-line{
+      margin-top:2px;
+    }
 
     .actions{
       display:flex;
@@ -166,7 +189,7 @@
       border-radius:14px;
       cursor:pointer;
       background:#ffffff;
-      font-size:24px;
+      font-size:23px;
     }
 
     .domain-item.active{
@@ -187,7 +210,7 @@
       background:#ffffff;
       color:var(--text);
       outline:none;
-      font-size:24px;
+      font-size:23px;
     }
 
     textarea{
@@ -250,7 +273,7 @@
     .code{
       font-weight:800;
       letter-spacing:.5px;
-      font-size:24px;
+      font-size:23px;
     }
 
     .std{
@@ -490,8 +513,9 @@
       <div>
         <div class="masthead masthead-box">
           <span class="masthead-line" id="headLine1">المملكة العربية السعودية - وزارة التعليم</span>
-          <span class="masthead-line" id="headLine2">الابتدائية السادسة والثلاثون - فريق التميز - مديرة المدرسة: نورة الرفاعي</span>
+          <span class="masthead-line" id="headLine2">روضة وابتدائية الطوال - فريق التميز - مديرة المدرسة: هدى حمدي </span>
         </div>
+
         <h1>إدارة شواهد التقويم المدرسي</h1>
         <div class="sub">منصة محلية لإضافة الشواهد لكل مؤشر — روابط / صور / ملفات — مع حفظ تلقائي.</div>
       </div>
@@ -822,15 +846,17 @@ const DOMAIN_ORDER = [
   {key:"env",name:"مجال البيئة المدرسية"}
 ];
 
+const DEFAULT_SETTINGS = {
+  line1:"المملكة العربية السعودية - وزارة التعليم",
+  schoolName:"الابتدائية السادسة والثلاثون",
+  teamName:"فريق التميز",
+  principalName:"نورة الرفاعي"
+};
+
 const SEED = {
   version:1,
   activeDomain:"admin",
-  settings:{
-    line1:"المملكة العربية السعودية - وزارة التعليم",
-    schoolName:"الابتدائية السادسة والثلاثون",
-    teamName:"فريق التميز",
-    principalName:"نورة الرفاعي"
-  },
+  settings:structuredClone(DEFAULT_SETTINGS),
   domains:{
     admin:{
       name:"الإدارة المدرسية",
@@ -866,7 +892,7 @@ const SEED = {
 let state = loadState() || structuredClone(SEED);
 
 if(!state.settings){
-  state.settings = structuredClone(SEED.settings);
+  state.settings = structuredClone(DEFAULT_SETTINGS);
 }
 
 const domainList = $("#domainList");
@@ -883,9 +909,9 @@ function clearThumbUrls(){
 }
 
 function renderHeader(){
-  const s = state.settings || SEED.settings;
-  $("#headLine1").textContent = s.line1 || "المملكة العربية السعودية - وزارة التعليم";
-  $("#headLine2").textContent = `${s.schoolName || "اسم المدرسة"} - ${s.teamName || "فريق التميز"} - مديرة المدرسة: ${s.principalName || "اسم المديرة"}`;
+  const s = state.settings || DEFAULT_SETTINGS;
+  $("#headLine1").textContent = s.line1 || DEFAULT_SETTINGS.line1;
+  $("#headLine2").textContent = `${s.schoolName || DEFAULT_SETTINGS.schoolName} - ${s.teamName || DEFAULT_SETTINGS.teamName} - مديرة المدرسة: ${s.principalName || DEFAULT_SETTINGS.principalName}`;
 }
 
 function countEvidence(indicatorId){
@@ -1080,20 +1106,20 @@ function hideModal(id){
 }
 
 function openSettingsModal(){
-  const s = state.settings || SEED.settings;
+  const s = state.settings || DEFAULT_SETTINGS;
 
-  $("#sLine1").value = s.line1 || "";
-  $("#sSchool").value = s.schoolName || "";
-  $("#sTeam").value = s.teamName || "";
-  $("#sPrincipal").value = s.principalName || "";
+  $("#sLine1").value = s.line1 || DEFAULT_SETTINGS.line1;
+  $("#sSchool").value = s.schoolName || DEFAULT_SETTINGS.schoolName;
+  $("#sTeam").value = s.teamName || DEFAULT_SETTINGS.teamName;
+  $("#sPrincipal").value = s.principalName || DEFAULT_SETTINGS.principalName;
 
   showModal("mSettings");
 }
 
 function saveSettings(){
-  const line1 = $("#sLine1").value.trim() || "المملكة العربية السعودية - وزارة التعليم";
+  const line1 = $("#sLine1").value.trim() || DEFAULT_SETTINGS.line1;
   const schoolName = $("#sSchool").value.trim();
-  const teamName = $("#sTeam").value.trim() || "فريق التميز";
+  const teamName = $("#sTeam").value.trim() || DEFAULT_SETTINGS.teamName;
   const principalName = $("#sPrincipal").value.trim();
 
   if(!schoolName || !principalName){
@@ -1432,7 +1458,7 @@ async function viewEvidence(ev,openInNewTab = false){
 async function exportData(){
   const payload = {
     exportedAt:new Date().toISOString(),
-    note:"هذا التصدير يحتوي على البيانات النصية والروابط فقط. الملفات والصور المخزنة في IndexedDB لا يمكن تضمينها داخل JSON تلقائيًا. لإعادة نقل الملفات أعيدي رفعها في المتصفح الجديد.",
+    note:"هذا التصدير يحتوي على البيانات النصية والروابط وبيانات المدرسة فقط. الملفات والصور المخزنة في IndexedDB لا يمكن تضمينها داخل JSON تلقائيًا. لإعادة نقل الملفات أعيدي رفعها في المتصفح الجديد.",
     state
   };
 
@@ -1460,7 +1486,7 @@ function importData(file){
         state = parsed.state;
 
         if(!state.settings){
-          state.settings = structuredClone(SEED.settings);
+          state.settings = structuredClone(DEFAULT_SETTINGS);
         }
 
         saveState();
