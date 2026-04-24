@@ -305,60 +305,23 @@
 
     .ev-grid{
       display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
+      grid-template-columns:repeat(2,minmax(0,1fr));
       gap:10px;
       margin-top:10px;
     }
 
-    @media(max-width:980px){
-      .ev-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-    }
-
-    @media(max-width:560px){
+    @media(max-width:760px){
       .ev-grid{grid-template-columns:1fr}
     }
 
     .ev{
       border:1px solid var(--border);
       border-radius:14px;
-      overflow:hidden;
       background:#fff;
+      padding:12px;
       display:flex;
       flex-direction:column;
-    }
-
-    .thumb{
-      height:140px;
-      background:#f2f6f2;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      color:var(--muted);
-      position:relative;
-    }
-
-    .thumb img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
-    }
-
-    .thumb .tag{
-      position:absolute;
-      bottom:8px;
-      left:8px;
-      background:rgba(15,122,58,.92);
-      color:#fff;
-      font-size:18px;
-      padding:4px 8px;
-      border-radius:999px;
-    }
-
-    .ev .info{
-      padding:10px 10px 12px;
-      display:flex;
-      flex-direction:column;
-      gap:6px;
+      gap:8px;
     }
 
     .ev .title{
@@ -433,27 +396,6 @@
       background:#fff;
     }
 
-    .viewer{
-      width:100%;
-      height:70vh;
-      border:1px solid var(--border);
-      border-radius:14px;
-      overflow:hidden;
-      background:#f7faf7;
-    }
-
-    .viewer iframe,.viewer embed{
-      width:100%;
-      height:100%;
-      border:0;
-    }
-
-    .viewer img{
-      width:100%;
-      height:100%;
-      object-fit:contain;
-    }
-
     .hint{
       color:var(--muted);
       font-size:18px;
@@ -516,7 +458,7 @@
         </div>
 
         <h1>إدارة شواهد التقويم المدرسي</h1>
-        <div class="sub">منصة محلية لإضافة الشواهد لكل مؤشر — روابط / صور / ملفات — مع حفظ تلقائي.</div>
+        <div class="sub">منصة محلية لإضافة روابط الشواهد لكل مؤشر مع حفظ تلقائي.</div>
       </div>
 
       <div class="actions">
@@ -549,12 +491,10 @@
           <div class="pill">
             💾 الحفظ تلقائيًا:
             <span class="kbd">LocalStorage</span>
-            +
-            <span class="kbd">IndexedDB</span>
           </div>
 
           <div style="margin-top:8px">
-            عند الإغلاق يتم حفظ البيانات تلقائيًا. لنقل نسخة لجهاز آخر استخدمي <b>تصدير/استيراد</b>.
+            هذا الإصدار مخصص لإضافة <b>روابط فقط</b> بدون رفع صور أو ملفات.
           </div>
         </div>
       </div>
@@ -662,7 +602,7 @@
 
       <div style="margin-top:10px">
         <label class="tiny">وثائق مقترحة</label>
-        <textarea id="fSuggested" placeholder="مثال: سجل الخطة التشغيلية، تقارير، صور..."></textarea>
+        <textarea id="fSuggested" placeholder="مثال: رابط ملف الخطة، رابط صورة النشاط، رابط تقرير..."></textarea>
       </div>
 
       <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
@@ -673,38 +613,24 @@
   </div>
 </div>
 
-<!-- إضافة شاهد -->
+<!-- إضافة رابط شاهد -->
 <div class="modal" id="mEvidence">
   <div class="dialog">
     <div class="dh">
-      <strong id="mEvidenceTitle">إضافة شاهد</strong>
+      <strong id="mEvidenceTitle">إضافة رابط شاهد</strong>
       <button class="close" id="closeEvidence">✕</button>
     </div>
 
     <div class="db">
-      <div class="split">
-        <div>
-          <label class="tiny">نوع الشاهد</label>
-          <select id="evType">
-            <option value="link">رابط</option>
-            <option value="file">ملف / صورة من الجهاز</option>
-          </select>
-        </div>
-
-        <div>
-          <label class="tiny">عنوان الشاهد</label>
-          <input type="text" id="evTitle" placeholder="مثال: صورة تنفيذ نشاط" />
-        </div>
+      <div>
+        <label class="tiny">عنوان الرابط</label>
+        <input type="text" id="evTitle" placeholder="مثال: رابط خطة المدرسة" />
       </div>
 
-      <div id="evLinkBox" style="margin-top:10px">
-        <label class="tiny">الرابط</label>
+      <div style="margin-top:10px">
+        <label class="tiny">رابط الشاهد</label>
         <input type="text" id="evUrl" placeholder="https://..." />
-      </div>
-
-      <div id="evFileBox" style="margin-top:10px;display:none">
-        <label class="tiny">اختيار ملف أو صورة</label>
-        <input type="file" id="evFile" />
+        <div class="hint">يمكنك إضافة روابط Google Drive أو OneDrive أو أي رابط مباشر.</div>
       </div>
 
       <div style="margin-top:10px">
@@ -713,28 +639,9 @@
       </div>
 
       <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
-        <button class="primary" id="saveEvidence">إضافة</button>
+        <button class="primary" id="saveEvidence">إضافة الرابط</button>
         <button id="cancelEvidence">إلغاء</button>
       </div>
-    </div>
-  </div>
-</div>
-
-<!-- استعراض -->
-<div class="modal" id="mViewer">
-  <div class="dialog">
-    <div class="dh">
-      <strong id="viewerTitle">استعراض</strong>
-
-      <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <button id="viewerOpen">فتح في تبويب جديد</button>
-        <button class="close" id="closeViewer">✕</button>
-      </div>
-    </div>
-
-    <div class="db">
-      <div class="viewer" id="viewer"></div>
-      <div class="hint" id="viewerHint" style="margin-top:8px"></div>
     </div>
   </div>
 </div>
@@ -742,21 +649,9 @@
 <div class="toast" id="toast"></div>
 
 <script>
-function createProjectNamespace(){
-  const path = location.pathname
-    .replace(/\/index\.html$/i,"")
-    .replace(/\/$/,"") || "/";
-  return `${location.hostname}${path}`;
-}
-
-const PROJECT_NAMESPACE = createProjectNamespace();
-const APP_KEY = `schoolEvidenceApp:${PROJECT_NAMESPACE}:v3`;
-const BACKUP_KEY = `${APP_KEY}:backup`;
-const DB_NAME = `schoolEvidenceBlobs:${PROJECT_NAMESPACE}:v3`;
-const DB_STORE = "blobs";
-
-let activeViewerUrl = null;
-let thumbUrls = [];
+const PROJECT_NAMESPACE = "schoolEvidenceLinksOnly:v1";
+const APP_KEY = PROJECT_NAMESPACE + ":state";
+const BACKUP_KEY = PROJECT_NAMESPACE + ":backup";
 
 function uuid(){
   return crypto.randomUUID ? crypto.randomUUID() : "id-" + Date.now() + "-" + Math.random().toString(16).slice(2);
@@ -779,109 +674,42 @@ function escapeHtml(value){
   });
 }
 
-function safeStringify(data){
-  try{
-    return JSON.stringify(data);
-  }catch(error){
-    console.error("تعذر تحويل البيانات للحفظ",error);
-    return null;
-  }
+function normalizeUrl(url){
+  const value = String(url || "").trim();
+  if(!value) return "";
+  if(/^https?:\/\//i.test(value)) return value;
+  return "https://" + value;
 }
 
 function saveState(){
-  const text = safeStringify(state);
-  if(!text){
-    toast("تعذر حفظ البيانات");
-    return false;
-  }
-
   try{
+    const text = JSON.stringify(state);
     localStorage.setItem(APP_KEY,text);
     localStorage.setItem(BACKUP_KEY,text);
-    localStorage.setItem(`${APP_KEY}:savedAt`,new Date().toISOString());
+    localStorage.setItem(APP_KEY + ":savedAt",new Date().toISOString());
     return true;
   }catch(error){
-    console.error("فشل الحفظ في localStorage",error);
-    alert("تعذر حفظ البيانات. قد تكون مساحة التخزين ممتلئة. صدّري نسخة احتياطية الآن.");
+    console.error("فشل حفظ البيانات:",error);
+    alert("تعذر حفظ البيانات. قد تكون مساحة المتصفح ممتلئة.");
     return false;
   }
 }
 
 function forceSave(){
-  try{
-    saveState();
-  }catch(error){
-    console.error("فشل الحفظ عند الإغلاق",error);
-  }
+  try{ saveState(); }catch(error){ console.error(error); }
 }
 
 function loadState(){
-  const keys = [APP_KEY,BACKUP_KEY];
-
-  for(const key of keys){
-    try{
-      const raw = localStorage.getItem(key);
-      if(raw){
-        const parsed = JSON.parse(raw);
-        if(parsed && parsed.domains && parsed.evidence){
-          return parsed;
-        }
-      }
-    }catch(error){
-      console.warn("تعذر قراءة نسخة محفوظة",key,error);
-    }
+  try{
+    const raw = localStorage.getItem(APP_KEY) || localStorage.getItem(BACKUP_KEY);
+    if(!raw) return null;
+    const parsed = JSON.parse(raw);
+    if(parsed && parsed.domains && parsed.evidence) return parsed;
+    return null;
+  }catch(error){
+    console.error("تعذر تحميل البيانات:",error);
+    return null;
   }
-
-  return null;
-}
-
-function openDB(){
-  return new Promise((resolve,reject)=>{
-    const req = indexedDB.open(DB_NAME,1);
-
-    req.onupgradeneeded = ()=>{
-      const db = req.result;
-      if(!db.objectStoreNames.contains(DB_STORE)){
-        db.createObjectStore(DB_STORE,{keyPath:"id"});
-      }
-    };
-
-    req.onsuccess = ()=>resolve(req.result);
-    req.onerror = ()=>reject(req.error);
-  });
-}
-
-async function putBlob(record){
-  const db = await openDB();
-
-  return new Promise((resolve,reject)=>{
-    const tx = db.transaction(DB_STORE,"readwrite");
-    tx.objectStore(DB_STORE).put(record);
-    tx.oncomplete = ()=>resolve(true);
-    tx.onerror = ()=>reject(tx.error);
-  });
-}
-
-async function getBlob(id){
-  const db = await openDB();
-
-  return new Promise((resolve,reject)=>{
-    const tx = db.transaction(DB_STORE,"readonly");
-    const req = tx.objectStore(DB_STORE).get(id);
-    req.onsuccess = ()=>resolve(req.result || null);
-    req.onerror = ()=>reject(req.error);
-  });
-}
-
-async function deleteBlob(id){
-  const db = await openDB();
-
-  return new Promise((resolve,reject)=>{
-    const tx = db.transaction(DB_STORE,"readwrite");
-    tx.objectStore(DB_STORE).delete(id);
-    tx.oncomplete = ()=>resolve(true);
-    tx.onerror = ()=>reject(tx.error);
-  });
 }
 
 const DOMAIN_ORDER = [
@@ -899,8 +727,7 @@ const DEFAULT_SETTINGS = {
 };
 
 const SEED = {
-  version:3,
-  projectNamespace:PROJECT_NAMESPACE,
+  version:1,
   activeDomain:"admin",
   settings:structuredClone(DEFAULT_SETTINGS),
   domains:{
@@ -941,22 +768,11 @@ if(!state.settings){
   state.settings = structuredClone(DEFAULT_SETTINGS);
 }
 
-if(!state.projectNamespace){
-  state.projectNamespace = PROJECT_NAMESPACE;
-}
-
 const domainList = $("#domainList");
 const cards = $("#cards");
 const q = $("#q");
 const stat = $("#stat");
 const empty = $("#empty");
-
-function clearThumbUrls(){
-  for(const url of thumbUrls){
-    try{ URL.revokeObjectURL(url); }catch{}
-  }
-  thumbUrls = [];
-}
 
 function renderHeader(){
   const s = state.settings || DEFAULT_SETTINGS;
@@ -972,10 +788,7 @@ function countEvidence(indicatorId){
 function countDomainEvidence(domainKey){
   const domain = state.domains[domainKey];
   if(!domain) return 0;
-
-  return (domain.indicators || []).reduce((sum,item)=>{
-    return sum + countEvidence(item.id);
-  },0);
+  return (domain.indicators || []).reduce((sum,item)=>sum + countEvidence(item.id),0);
 }
 
 function normalizeText(value){
@@ -997,7 +810,7 @@ function renderDomains(){
         <div style="font-weight:900">${escapeHtml(domain?.name || d.name)}</div>
         <small>${count} مؤشر</small>
       </div>
-      <span class="pill">📎 ${countDomainEvidence(d.key)}</span>
+      <span class="pill">🔗 ${countDomainEvidence(d.key)}</span>
     `;
 
     el.onclick = ()=>{
@@ -1011,14 +824,11 @@ function renderDomains(){
 }
 
 function renderCards(){
-  clearThumbUrls();
-
   const domain = state.domains[state.activeDomain];
   const query = normalizeText(q.value);
 
   const list = (domain?.indicators || []).filter(item=>{
     if(!query) return true;
-
     const all = normalizeText([
       item.code,
       item.standard,
@@ -1026,7 +836,6 @@ function renderCards(){
       item.desc,
       item.suggested
     ].join(" "));
-
     return all.includes(query);
   });
 
@@ -1049,7 +858,7 @@ function renderCards(){
         </div>
 
         <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <button data-act="addEv">+ إضافة شاهد</button>
+          <button data-act="addEv">+ إضافة رابط</button>
           <button data-act="edit">تعديل</button>
           <button class="danger" data-act="del">حذف</button>
         </div>
@@ -1064,8 +873,8 @@ function renderCards(){
 
         <div class="evidence">
           <div class="evidence-hd">
-            <div class="pill">📎 الشواهد: <b>${evCount}</b></div>
-            <div class="hint">إرفاق رابط / صورة / ملف — مع الاستعراض داخل المنصة</div>
+            <div class="pill">🔗 الروابط: <b>${evCount}</b></div>
+            <div class="hint">إضافة روابط الشواهد فقط</div>
           </div>
 
           <div class="ev-grid" id="ev-${item.id}"></div>
@@ -1084,7 +893,7 @@ function renderCards(){
   saveState();
 }
 
-async function renderEvidenceGrid(indicatorId){
+function renderEvidenceGrid(indicatorId){
   const grid = document.getElementById(`ev-${indicatorId}`);
   if(!grid) return;
 
@@ -1095,49 +904,39 @@ async function renderEvidenceGrid(indicatorId){
     const msg = document.createElement("div");
     msg.className = "hint";
     msg.style.gridColumn = "1 / -1";
-    msg.textContent = "لا توجد شواهد بعد. اضغطي + إضافة شاهد.";
+    msg.textContent = "لا توجد روابط بعد. اضغطي + إضافة رابط.";
     grid.appendChild(msg);
     return;
   }
 
-  for(const ev of list){
+  list.forEach(ev=>{
     const el = document.createElement("div");
     el.className = "ev";
 
-    let thumb = `<div class="thumb"><div>📎</div><span class="tag">${ev.type === "link" ? "رابط" : "ملف"}</span></div>`;
-
-    if(ev.type === "file" && ev.mime && ev.mime.startsWith("image/")){
-      const rec = await getBlob(ev.blobId);
-
-      if(rec?.blob){
-        const url = URL.createObjectURL(rec.blob);
-        thumbUrls.push(url);
-        thumb = `<div class="thumb"><img alt="" src="${url}" loading="lazy"><span class="tag">صورة</span></div>`;
-      }
-    }
-
     el.innerHTML = `
-      ${thumb}
-
-      <div class="info">
-        <div class="title">${escapeHtml(ev.title || (ev.type === "link" ? "رابط" : (ev.name || "ملف")))}</div>
-        <div class="sub">${escapeHtml(ev.type === "link" ? ev.url : (ev.name || ev.mime || ""))}</div>
-        ${ev.notes ? `<div class="sub">📝 ${escapeHtml(ev.notes)}</div>` : ""}
-
-        <div class="row">
-          <button data-act="view">استعراض</button>
-          <button data-act="open">فتح</button>
-          <button class="danger" data-act="remove">حذف</button>
-        </div>
+      <div class="title">${escapeHtml(ev.title || "رابط شاهد")}</div>
+      <div class="sub">${escapeHtml(ev.url || "")}</div>
+      ${ev.notes ? `<div class="sub">📝 ${escapeHtml(ev.notes)}</div>` : ""}
+      <div class="row">
+        <button data-act="open">فتح الرابط</button>
+        <button data-act="copy">نسخ الرابط</button>
+        <button class="danger" data-act="remove">حذف</button>
       </div>
     `;
 
-    el.querySelector('[data-act="view"]').onclick = ()=>viewEvidence(ev);
-    el.querySelector('[data-act="open"]').onclick = ()=>openEvidence(ev);
+    el.querySelector('[data-act="open"]').onclick = ()=>window.open(ev.url,"_blank","noopener,noreferrer");
+    el.querySelector('[data-act="copy"]').onclick = async ()=>{
+      try{
+        await navigator.clipboard.writeText(ev.url);
+        toast("تم نسخ الرابط ✅");
+      }catch{
+        toast("تعذر النسخ، انسخي الرابط يدويًا");
+      }
+    };
     el.querySelector('[data-act="remove"]').onclick = ()=>removeEvidence(indicatorId,ev.id);
 
     grid.appendChild(el);
-  }
+  });
 }
 
 function render(){
@@ -1152,11 +951,6 @@ function showModal(id){
 
 function hideModal(id){
   document.getElementById(id).classList.remove("show");
-
-  if(id === "mViewer"){
-    closeViewerUrl();
-  }
-
   saveState();
 }
 
@@ -1182,12 +976,7 @@ function saveSettings(){
     return;
   }
 
-  state.settings = {
-    line1,
-    schoolName,
-    teamName,
-    principalName
-  };
+  state.settings = {line1,schoolName,teamName,principalName};
 
   saveState();
   hideModal("mSettings");
@@ -1200,12 +989,10 @@ let editingIndicatorId = null;
 function findIndicatorDomain(indicatorId){
   for(const d of DOMAIN_ORDER){
     const domain = state.domains[d.key];
-
     if((domain?.indicators || []).some(item=>item.id === indicatorId)){
       return d.key;
     }
   }
-
   return state.activeDomain;
 }
 
@@ -1258,21 +1045,11 @@ function upsertIndicator(){
     }
 
     state.domains[domainKey].indicators.push({
-      id:editingIndicatorId,
-      standard,
-      code,
-      title,
-      desc,
-      suggested
+      id:editingIndicatorId,standard,code,title,desc,suggested
     });
   }else{
     state.domains[domainKey].indicators.push({
-      id:uuid(),
-      standard,
-      code,
-      title,
-      desc,
-      suggested
+      id:uuid(),standard,code,title,desc,suggested
     });
   }
 
@@ -1282,16 +1059,8 @@ function upsertIndicator(){
   toast("تم الحفظ ✅");
 }
 
-async function deleteIndicator(indicatorId){
-  if(!confirm("حذف المؤشر مع جميع الشواهد؟")) return;
-
-  const evidences = state.evidence[indicatorId] || [];
-
-  for(const ev of evidences){
-    if(ev.type === "file" && ev.blobId){
-      try{ await deleteBlob(ev.blobId); }catch{}
-    }
-  }
+function deleteIndicator(indicatorId){
+  if(!confirm("حذف المؤشر مع جميع الروابط؟")) return;
 
   delete state.evidence[indicatorId];
 
@@ -1313,26 +1082,17 @@ let currentIndicatorForEvidence = null;
 function openEvidenceModal(indicatorId){
   currentIndicatorForEvidence = indicatorId;
 
-  $("#mEvidenceTitle").textContent = "إضافة شاهد للمؤشر";
-  $("#evType").value = "link";
+  $("#mEvidenceTitle").textContent = "إضافة رابط شاهد";
   $("#evTitle").value = "";
   $("#evUrl").value = "";
   $("#evNotes").value = "";
-  $("#evFile").value = "";
 
-  toggleEvType();
   showModal("mEvidence");
 }
 
-function toggleEvType(){
-  const type = $("#evType").value;
-  $("#evLinkBox").style.display = type === "link" ? "block" : "none";
-  $("#evFileBox").style.display = type === "file" ? "block" : "none";
-}
-
-async function addEvidence(){
-  const type = $("#evType").value;
+function addEvidence(){
   const title = $("#evTitle").value.trim();
+  const url = normalizeUrl($("#evUrl").value);
   const notes = $("#evNotes").value.trim();
 
   if(!currentIndicatorForEvidence){
@@ -1340,58 +1100,18 @@ async function addEvidence(){
     return;
   }
 
+  if(!url || !/^https?:\/\//i.test(url)){
+    toast("فضلاً أدخلي رابطًا صحيحًا");
+    return;
+  }
+
   const list = state.evidence[currentIndicatorForEvidence] ||= [];
-
-  if(type === "link"){
-    const url = $("#evUrl").value.trim();
-
-    if(!url || !/^https?:\/\//i.test(url)){
-      toast("فضلاً أدخلي رابط يبدأ بـ http أو https");
-      return;
-    }
-
-    list.push({
-      id:uuid(),
-      type:"link",
-      title,
-      url,
-      notes,
-      createdAt:new Date().toISOString()
-    });
-
-    saveState();
-    hideModal("mEvidence");
-    render();
-    toast("تمت الإضافة ✅");
-    return;
-  }
-
-  const file = $("#evFile").files?.[0];
-
-  if(!file){
-    toast("فضلاً اختاري ملفًا");
-    return;
-  }
-
-  const blobId = uuid();
-
-  await putBlob({
-    id:blobId,
-    blob:file,
-    name:file.name,
-    mime:file.type || "application/octet-stream",
-    size:file.size,
-    createdAt:new Date().toISOString()
-  });
 
   list.push({
     id:uuid(),
-    type:"file",
+    type:"link",
     title,
-    blobId,
-    name:file.name,
-    mime:file.type || "application/octet-stream",
-    size:file.size,
+    url,
     notes,
     createdAt:new Date().toISOString()
   });
@@ -1399,22 +1119,17 @@ async function addEvidence(){
   saveState();
   hideModal("mEvidence");
   render();
-  toast("تم حفظ الملف داخل المتصفح ✅");
+  toast("تمت إضافة الرابط ✅");
 }
 
-async function removeEvidence(indicatorId,evidenceId){
-  if(!confirm("حذف الشاهد؟")) return;
+function removeEvidence(indicatorId,evidenceId){
+  if(!confirm("حذف الرابط؟")) return;
 
   const list = state.evidence[indicatorId] || [];
   const index = list.findIndex(item=>item.id === evidenceId);
 
-  if(index === -1) return;
-
-  const ev = list[index];
-  list.splice(index,1);
-
-  if(ev.type === "file" && ev.blobId){
-    try{ await deleteBlob(ev.blobId); }catch{}
+  if(index > -1){
+    list.splice(index,1);
   }
 
   saveState();
@@ -1422,104 +1137,12 @@ async function removeEvidence(indicatorId,evidenceId){
   toast("تم الحذف");
 }
 
-function closeViewerUrl(){
-  if(activeViewerUrl){
-    try{ URL.revokeObjectURL(activeViewerUrl); }catch{}
-    activeViewerUrl = null;
-  }
-}
-
-function openEvidence(ev){
-  if(ev.type === "link"){
-    window.open(ev.url,"_blank","noopener,noreferrer");
-    return;
-  }
-
-  viewEvidence(ev,true);
-}
-
-async function viewEvidence(ev,openInNewTab = false){
-  const viewer = $("#viewer");
-  const hint = $("#viewerHint");
-  const btnOpen = $("#viewerOpen");
-
-  closeViewerUrl();
-
-  viewer.innerHTML = "";
-  hint.textContent = "";
-
-  if(ev.type === "link"){
-    $("#viewerTitle").textContent = ev.title || "رابط";
-
-    const frame = document.createElement("iframe");
-    frame.referrerPolicy = "no-referrer";
-    frame.src = ev.url;
-
-    viewer.appendChild(frame);
-
-    btnOpen.onclick = ()=>window.open(ev.url,"_blank","noopener,noreferrer");
-
-    showModal("mViewer");
-
-    if(openInNewTab){
-      btnOpen.click();
-    }
-
-    saveState();
-    return;
-  }
-
-  const rec = await getBlob(ev.blobId);
-
-  if(!rec?.blob){
-    toast("لم يتم العثور على الملف داخل المتصفح");
-    return;
-  }
-
-  const url = URL.createObjectURL(rec.blob);
-  activeViewerUrl = url;
-
-  $("#viewerTitle").textContent = ev.title || ev.name || "ملف";
-
-  btnOpen.onclick = ()=>window.open(url,"_blank","noopener");
-
-  const mime = ev.mime || rec.mime || "";
-
-  if(mime.startsWith("image/")){
-    const img = document.createElement("img");
-    img.src = url;
-    img.alt = ev.title || ev.name || "صورة";
-    viewer.appendChild(img);
-  }else if(mime === "application/pdf"){
-    const embed = document.createElement("embed");
-    embed.src = url;
-    embed.type = "application/pdf";
-    viewer.appendChild(embed);
-  }else{
-    const box = document.createElement("div");
-    box.className = "hint";
-    box.style.padding = "14px";
-    box.innerHTML = "لا يمكن استعراض هذا النوع داخل الصفحة دائمًا. استخدمي زر <b>فتح في تبويب جديد</b>.";
-    viewer.appendChild(box);
-    hint.textContent = `النوع: ${mime || "غير معروف"} — الاسم: ${ev.name || ""}`;
-  }
-
-  showModal("mViewer");
-
-  if(openInNewTab){
-    btnOpen.click();
-  }
-
-  saveState();
-}
-
-async function exportData(){
+function exportData(){
   forceSave();
 
   const payload = {
     exportedAt:new Date().toISOString(),
-    projectNamespace:PROJECT_NAMESPACE,
-    note:"هذا التصدير يحتوي على البيانات النصية والروابط وبيانات المدرسة فقط. الملفات والصور المخزنة في IndexedDB لا يمكن تضمينها داخل JSON تلقائيًا. لإعادة نقل الملفات أعيدي رفعها في المتصفح الجديد.",
+    note:"هذا التصدير يحتوي على البيانات والروابط فقط.",
     state
   };
 
@@ -1528,7 +1151,7 @@ async function exportData(){
 
   const a = document.createElement("a");
   a.href = url;
-  a.download = "school-evidence-export.json";
+  a.download = "school-evidence-links-export.json";
   a.click();
 
   setTimeout(()=>URL.revokeObjectURL(url),2000);
@@ -1550,8 +1173,6 @@ function importData(file){
           state.settings = structuredClone(DEFAULT_SETTINGS);
         }
 
-        state.projectNamespace = PROJECT_NAMESPACE;
-
         saveState();
         render();
         toast("تم الاستيراد ✅");
@@ -1566,20 +1187,18 @@ function importData(file){
   reader.readAsText(file);
 }
 
-async function resetAll(){
-  if(!confirm("سيتم حذف كل البيانات المخزنة في هذا الرابط فقط. هل أنتِ متأكدة؟")) return;
+function resetAll(){
+  if(!confirm("سيتم حذف كل البيانات المخزنة. هل أنتِ متأكدة؟")) return;
 
   localStorage.removeItem(APP_KEY);
   localStorage.removeItem(BACKUP_KEY);
-  localStorage.removeItem(`${APP_KEY}:savedAt`);
-
-  indexedDB.deleteDatabase(DB_NAME);
+  localStorage.removeItem(APP_KEY + ":savedAt");
 
   state = structuredClone(SEED);
 
   saveState();
   render();
-  toast("تمت إعادة الضبط لهذا الرابط فقط");
+  toast("تمت إعادة الضبط");
 }
 
 q.addEventListener("input",()=>{
@@ -1597,12 +1216,9 @@ $("#saveIndicator").addEventListener("click",upsertIndicator);
 $("#cancelIndicator").addEventListener("click",()=>hideModal("mIndicator"));
 $("#closeIndicator").addEventListener("click",()=>hideModal("mIndicator"));
 
-$("#evType").addEventListener("change",toggleEvType);
 $("#saveEvidence").addEventListener("click",addEvidence);
 $("#cancelEvidence").addEventListener("click",()=>hideModal("mEvidence"));
 $("#closeEvidence").addEventListener("click",()=>hideModal("mEvidence"));
-
-$("#closeViewer").addEventListener("click",()=>hideModal("mViewer"));
 
 $("#btnExport").addEventListener("click",exportData);
 
@@ -1618,7 +1234,7 @@ $("#importFile").addEventListener("change",e=>{
 
 $("#btnReset").addEventListener("click",resetAll);
 
-["mSettings","mIndicator","mEvidence","mViewer"].forEach(id=>{
+["mSettings","mIndicator","mEvidence"].forEach(id=>{
   const modal = document.getElementById(id);
 
   modal.addEventListener("click",e=>{
